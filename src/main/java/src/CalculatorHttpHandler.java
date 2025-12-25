@@ -3,13 +3,12 @@ package src;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 public class CalculatorHttpHandler implements HttpHandler {
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) {
 
         String query = exchange.getRequestURI().getQuery();
 
@@ -18,6 +17,7 @@ public class CalculatorHttpHandler implements HttpHandler {
             if (query == null) {
                 exchange.sendResponseHeaders(400, 0);
                 os.write("There is no parameters. Try something like \"http://localhost:8080/calc?num1=10&num2=20&arg=+\"".getBytes());
+                return;
             }
 
             String[] args = query.split("&");
@@ -48,7 +48,7 @@ public class CalculatorHttpHandler implements HttpHandler {
                 resp = "Result = " + sum;
                 os.write(resp.getBytes());
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 os.write("Invalid number format".getBytes());
             }
 
